@@ -2,8 +2,8 @@
 // Created by Gautam Sharma on 9/12/21.
 //
 
-#ifndef UNTITLED_TENSOR_H
-#define UNTITLED_TENSOR_H
+#ifndef TENSOR_H
+#define TENSOR_H
 #include <vector>
 #include <iostream>
 #include <memory>
@@ -263,4 +263,4 @@ Tensor<T>::Tensor(const Tensor &input) noexcept {
     this->ptrToTensor = std::make_unique<std::vector<T>>(input.begin(), input.end());
 }
 
-#endif //UNTITLED_TENSOR_H
+#endif //TENSOR_H
