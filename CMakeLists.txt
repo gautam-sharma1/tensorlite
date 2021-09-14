@@ -10,8 +10,8 @@ include_directories(include/)
 
 link_directories(/Users/gautamsharma/Desktop/C++/googletest/build/lib/)
 
-add_executable(tensorlite main.cpp src/Tensor.cpp include/Utility.h src/Utility.cpp)
+add_executable(tensorlite main.cpp src/Tensor.cpp src/Utility.cpp)
 
-add_executable(test tests/t_Tensor.cpp src/Tensor.cpp include/Utility.h src/Utility.cpp)
+add_executable(test tests/t_Tensor.cpp src/Tensor.cpp src/Utility.cpp)
 
 target_link_libraries(test gtest gmock gtest_main)
