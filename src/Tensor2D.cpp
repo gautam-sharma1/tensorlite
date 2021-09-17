@@ -9,6 +9,9 @@
 template<class T>
 Tensor2D<T>::Tensor2D(const std::vector<Tensor<T>> &input) noexcept{
 
+    __CHECK__(!isValidInput(input)){
+        throw std::logic_error("Cannot instantiate Tensor2D with tensors of different size");
+    }
     ptrToTensor2D = std::make_unique<std::vector<Tensor<T>>>(input);
     std::copy(input.begin(), input.end(), (ptrToTensor2D.get())->begin());
 
