@@ -90,3 +90,27 @@ TEST(GTtest, CanAddMultiElementTensorCorrectlyInPlace){
     ASSERT_TRUE(EXPECTED == t1);     // test if t1 is modified in place
 }
 
+TEST(GTtest, OverloadSquareBracketOperatorTensor){
+    Tensor<float> t1({1,-22.2,3,4,5});
+    float EXPECTED_SECOND_ELEMENT_t1 = -22.2;
+    float ACTUAL_SECOND_ELEMENT_t1 = t1[1];
+
+    Tensor<float> t2({1,2,43,-404,5});
+    float EXPECTED_FOURTH_ELEMENT_t2 = -404;
+    float ACTUAL_FOURTH_ELEMENT_t2 = t2[3];
+
+
+    ASSERT_EQ(EXPECTED_SECOND_ELEMENT_t1, ACTUAL_SECOND_ELEMENT_t1);
+    ASSERT_EQ(EXPECTED_FOURTH_ELEMENT_t2, ACTUAL_FOURTH_ELEMENT_t2);
+}
+
+
+TEST(GTtest, CanMultiplyInPlace){
+    Tensor<float> t1({0,1,22,33,4});
+    Tensor<float> t2({0,1,2,3,4});
+    Tensor<float> ACTUAL_1 = t1.multiply(t2);
+    Tensor<float> EXPECTED_1 = {0,1,44,99,16};
+    ASSERT_TRUE(EXPECTED_1 == ACTUAL_1);
+    ASSERT_TRUE(t1 == ACTUAL_1); // should modify t1 in place
+
+}

@@ -22,36 +22,36 @@ public:
     Tensor(const Tensor & input) noexcept;
     Tensor(Tensor && input) noexcept;
     Tensor& operator = (Tensor && input) noexcept;
-    ~Tensor() = default;
+    //~Tensor = default;
     __NO_DISCARD__ size_t size() const noexcept;
 
 
     // returns element at index idx
-    const T &operator[](const int &idx) const;
-
-    // inplace subtraction
-    Tensor &plus(const Tensor &other);
+    const T& operator[] (const int &idx) const;
 
     // inplace addition
-    Tensor &minus(const Tensor &other);
+    virtual Tensor &plus(const Tensor &other);
+
+    // inplace subtraction
+    virtual Tensor &minus(const Tensor &other);
 
     // inplace multiplication
-    Tensor &multiply(const Tensor &other);
+    virtual Tensor &multiply(const Tensor &other);
 
     // addition by copy
-    Tensor operator+(const Tensor &other);
+    virtual Tensor operator+(const Tensor &other);
 
     // subtraction by copy
-    Tensor operator-(const Tensor &other);
+    virtual Tensor operator-(const Tensor &other);
 
     // multiplication by copy
     Tensor operator*(const Tensor &other);
 
 
 
-    Tensor &operator=(const Tensor &other);
-    inline bool operator==(Tensor &rhs) const;
-    inline bool operator!=(Tensor &rhs) const;
+    virtual Tensor &operator=(const Tensor &other);
+    virtual bool operator==(Tensor &rhs) const;
+    virtual bool operator!=(Tensor &rhs) const;
 
 
     /*
@@ -65,20 +65,20 @@ public:
 
 protected:
     __DO_NOT_CALL__
-    auto begin() const;
+    virtual auto begin() const noexcept -> decltype(typename std::vector<T>::iterator());
 
     __DO_NOT_CALL__
-    auto end() const;
+    virtual auto end() const noexcept -> decltype(typename std::vector<T>::iterator());
 
     __DO_NOT_CALL__
-    auto front() const;
+    virtual T front() const;
 
     __DO_NOT_CALL__
-    auto back() const;
+    virtual T back() const;
 
-    Tensor addOrSubtractByCopy(const Tensor &other, operation op) const;
-    Tensor &addOrSubtractInPlace(const Tensor &other, operation op);
-    Tensor getTensorCopy() const;
+    virtual Tensor addOrSubtractByCopy(const Tensor &other, operation op) const;
+    virtual Tensor &addOrSubtractInPlace(const Tensor &other, operation op);
+    virtual Tensor getTensorCopy() const;
 
 
 

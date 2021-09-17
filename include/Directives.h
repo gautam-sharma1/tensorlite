@@ -4,7 +4,7 @@
 
 #ifndef UNTITLED_DIRECTIVES_H
 #define UNTITLED_DIRECTIVES_H
-
+# include <vector>
 /*
  * Some syntactic sugar :)
  */
@@ -23,4 +23,4 @@
 
 
 
-#endif //UNTITLED_DIRECTIVES_H
+#endif //DIRECTIVES_H

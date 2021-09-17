@@ -116,25 +116,26 @@ Tensor<T> Tensor<T>::operator-(const Tensor &other) {
 }
 
 template<class T>
-auto Tensor<T>::begin() const {
+
+auto Tensor<T>::begin() const noexcept -> decltype(typename std::vector<T>::iterator()){
     return ptrToTensor->begin();
 }
 
 template<class T>
-auto Tensor<T>::end() const {
+auto Tensor<T>::end() const noexcept -> decltype(typename std::vector<T>::iterator()){
     return ptrToTensor->end();
 }
 
 // return by copy so need to make return value const
 template<class T>
-auto Tensor<T>::front() const {
+T Tensor<T>::front() const {
             __ASSERT__(this->size() >= 1);
     return ptrToTensor->front();
 }
 
 // return by copy so need to make return value const
 template<class T>
-auto Tensor<T>::back() const {
+T Tensor<T>::back() const {
     __ASSERT__(this->size() >= 1);
     return ptrToTensor->back();
 }
@@ -146,7 +147,7 @@ Tensor<T> Tensor<T>::getTensorCopy() const {
 }
 
 template<class T>
-const T &Tensor<T>::operator[](const int &idx) const {
+const T& Tensor<T>::operator [](const int &idx) const {
     return this->ptrToTensor->at(idx);
 }
 
@@ -172,7 +173,7 @@ template<class T>
 Tensor<T>::Tensor(const Tensor &input) noexcept {
 
     // first releases current ownership if any
-    this->ptrToTensor.release();
+    this->ptrToTensor.reset();
 
     // takes in new ownership
     this->ptrToTensor = std::make_unique<std::vector<T>>(input.begin(), input.end());
@@ -182,7 +183,6 @@ template<class T>
 Tensor<T>::Tensor(Tensor &&input) noexcept{
 
     // NOTE: The std::move function converts the lvalue other to an rvalue.
-    std::cout << "Move Constructor!" << std::endl;
     *this = std::move(input);
 
 
@@ -198,7 +198,6 @@ std::unique_ptr<std::vector<T>> &Tensor<T>::getUnderlyingPtr(){
 
 template<class T>
 Tensor<T> &Tensor<T>:: operator=(Tensor &&input) noexcept {
-    std::cout << "Move AA!" << std::endl;
     __ASSERT__(this != &input);
     // first releases current ownership if any
     this->ptrToTensor.reset();
@@ -216,6 +215,15 @@ Tensor<T> &Tensor<T>:: operator=(Tensor &&input) noexcept {
 
 }
 
+template<class T>
+Tensor<T> &Tensor<T>::multiply(const Tensor &other) {
+
+    __ASSERT__(other.size() == this->size());
+    std::transform(this->begin(), this->end(), other.begin(), this->begin(),
+                   std::multiplies<T>());
+    return *this;
+
+}
 
 template class Tensor<int>;
 template class Tensor<float>;
