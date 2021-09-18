@@ -14,17 +14,18 @@ class Tensor2D : public Tensor<T>{
 public:
     __ONLY_FOR_TESTING__ Tensor2D() noexcept = default;
     explicit Tensor2D(const std::vector<Tensor<T>> & input) noexcept;
-//    const Tensor2D<T> &operator[](const int &idx) const;
-//    virtual Tensor2D &plus(const Tensor2D &other) final;
+    __NO_DISCARD__ shape size() const noexcept;
+    const Tensor<T> &operator[](const int &idx) const;
+    virtual Tensor2D &plus(const Tensor2D &other) final;
 //
 //    // inplace subtraction
-//    virtual Tensor2D &minus(const Tensor2D &other) final;
+    virtual Tensor2D &minus(const Tensor2D &other) final;
 //
 //    // inplace multiplication
 //    virtual Tensor2D &multiply(const Tensor2D &other) final;
 //
-//    // addition by copy
-//    virtual Tensor2D operator+(const Tensor2D &other) final;
+    // addition by copy
+    virtual Tensor2D operator+(const Tensor2D &other) final;
 //
 //    // subtraction by copy
 //    virtual Tensor2D operator-(const Tensor2D &other) final;
@@ -35,8 +36,8 @@ public:
 //
 //
 //    virtual Tensor2D &operator=(const Tensor2D &other) final;
-//    virtual bool operator==(Tensor2D &rhs) const final;
-//    virtual bool operator!=(Tensor2D &rhs) const final;
+    virtual bool operator==(Tensor2D &rhs) const final;
+    virtual bool operator!=(Tensor2D &rhs) const final;
 //
 //
 //    /*
@@ -48,8 +49,8 @@ public:
 private:
     bool isValidInput(const std::vector<Tensor<T>> &input);
     std::unique_ptr<std::vector<Tensor<T>>> ptrToTensor2D = nullptr;
-    size_t rows_;
-    size_t cols_;
+    size_t rows_ = 0 ;
+    size_t cols_ = 0;
 };
 
 

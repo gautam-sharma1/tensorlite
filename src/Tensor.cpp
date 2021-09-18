@@ -88,7 +88,7 @@ bool Tensor<T>::operator==(Tensor &rhs) const {
 
 template<class T>
 bool Tensor<T>::operator!=(Tensor &rhs) const {
-    return *this != rhs;
+    return !(*this == rhs);
 }
 
 /*

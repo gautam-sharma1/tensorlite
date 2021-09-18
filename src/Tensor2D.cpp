@@ -34,7 +34,81 @@ bool Tensor2D<T>::isValidInput(const std::vector<Tensor<T>> &input) {
     }
 }
 
+template<class T>
+const Tensor<T> &Tensor2D<T>::operator[](const int &idx) const {
+    return ptrToTensor2D->at(idx);
+}
 
+template<class T>
+shape Tensor2D<T>::size() const noexcept {
+    return shape({this->rows_, this->cols_});
+}
+
+/*
+* Modifies in place
+*/
+template<class T>
+Tensor2D<T> &Tensor2D<T>::plus(const Tensor2D &other) {
+    __ASSERT__(other.size() == this->size());
+    for (auto r = 0; r < rows_; r++) {
+        Tensor<T> &temp1 = ptrToTensor2D->at(r);
+        Tensor<T> temp2 = other[r]; // Tensor<T>
+        temp1.plus(temp2);
+    }
+    return *this;
+}
+
+/*
+* Modifies in place
+*/
+template<class T>
+Tensor2D<T> &Tensor2D<T>::minus(const Tensor2D &other) {
+    __ASSERT__(other.size() == this->size());
+    for (auto r = 0; r < rows_; r++) {
+        Tensor<T> &temp1 = ptrToTensor2D->at(r);
+        Tensor<T> temp2 = other[r]; // Tensor<T>
+        temp1.minus(temp2);
+    }
+    return *this;
+}
+
+/*
+* Modifies by copy
+*/
+template<class T>
+Tensor2D<T> Tensor2D<T>::operator+(const Tensor2D &other) {
+    std::vector<Tensor<T>> toReturn;
+    __ASSERT__(other.size() == this->size());
+    for (auto r = 0; r < rows_; r++) {
+        Tensor<T> temp1 = ptrToTensor2D->at(r);
+        Tensor<T> temp2 = other[r]; // rth Tensor<T>
+        Tensor<T> temp_result = temp1 + temp2;
+        toReturn.push_back(temp_result);
+    }
+
+    return Tensor2D<T>(toReturn);
+}
+
+template<class T>
+bool Tensor2D<T>::operator==(Tensor2D &rhs) const {
+       for (auto r = 0; r < rows_; r++) {
+        Tensor<T> first = ptrToTensor2D->at(r);
+        Tensor<T> second = rhs[r];
+        if (first != second) {
+            return false;
+        }
+    }
+    return true;
+}
+
+template<class T>
+bool Tensor2D<T>::operator!=(Tensor2D &rhs) const {
+    return !(*this == rhs);
+}
+
+
+
+// explicit class initialization
 template class Tensor2D<int>;
 template class Tensor2D<float>;
 template class Tensor2D<double>;

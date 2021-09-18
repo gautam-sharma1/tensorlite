@@ -20,7 +20,7 @@
 #define __ONLY_FOR_TESTING__ // Function only defined for testing. Do not use !
 #define __INTERNAL__ // only for internal use
 #define __PUBLIC__ // Intended to be used by clients
-
+#define __CHECK__ if
 
 
 #endif //DIRECTIVES_H
