@@ -10,11 +10,13 @@
 
 template<class T>
 
-class Tensor2D : public Tensor<T>{
+class Tensor2D final: public Tensor<T>{
 public:
     __ONLY_FOR_TESTING__ Tensor2D() noexcept = default;
-    explicit Tensor2D(const std::vector<Tensor<T>> & input) noexcept;
-    __NO_DISCARD__ shape size() const noexcept;
+
+    explicit Tensor2D(const std::vector<Tensor<T>> & input);
+    explicit Tensor2D(const std::initializer_list<Tensor<T>> &input);
+    __NO_DISCARD__ const shape size() const noexcept;
     const Tensor<T> &operator[](const int &idx) const;
     virtual Tensor2D &plus(const Tensor2D &other) final;
 //
@@ -31,11 +33,12 @@ public:
 //    virtual Tensor2D operator-(const Tensor2D &other) final;
 //
 //    // multiplication by copy
-//    Tensor2D operator*(const Tensor2D &other);
+    Tensor2D operator*(const Tensor2D &other);
 //
 //
 //
 //    virtual Tensor2D &operator=(const Tensor2D &other) final;
+    Tensor2D transpose();
     virtual bool operator==(Tensor2D &rhs) const final;
     virtual bool operator!=(Tensor2D &rhs) const final;
 //
@@ -43,8 +46,8 @@ public:
 //    /*
 //    * Different template argument T1 since ostream is a friend and not part of the Tensor class
 //    */
-//    template<class T1>
-//    friend std::ostream &operator<<(std::ostream &os, Tensor2D<T1> &t1);
+    template<class T1>
+    friend std::ostream &operator<<(std::ostream &os, Tensor2D<T1> &t1);
 
 private:
     bool isValidInput(const std::vector<Tensor<T>> &input);
@@ -54,19 +57,17 @@ private:
 };
 
 
-//template<class T1>
-//std::ostream &operator<<(std::ostream &os, Tensor2D<T1> &input) {
-//    const Tensor tensorCopy = input.getTensorCopy();
-//    os << "Tensor{ ";
-//    for (size_t i = 0; i < input.size() - 1; i++) {
-//        os << tensorCopy[i] << ",";
-//    }
-//
-//    os << tensorCopy[input.size() - 1] << " ";
-//    os << "}" << std::endl;
-//
-//    return os;
-//}
-
+template<class T1>
+std::ostream &operator<<(std::ostream &os, Tensor2D<T1> &input) {
+    auto input_shape = input.size();
+    std::cout << "Tensor2D {" << std::endl;
+    for (int tensor_idx = 0; tensor_idx < input_shape.first_dimension; tensor_idx++) {
+        // TODO: Not efficient to make a new Tensor just to print
+        Tensor<T1> temp(input[tensor_idx]);
+        os << temp;
+    }
+    os << " }" << std::endl;
+    return os;
+}
 
 #endif //TENSORLITE_TENSOR2D_H

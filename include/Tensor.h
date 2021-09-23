@@ -92,7 +92,7 @@ private:
 template<class T1>
 std::ostream &operator<<(std::ostream &os, Tensor<T1> &input) {
     const Tensor tensorCopy = input.getTensorCopy();
-    os << "Tensor{ ";
+    os << "{ ";
     for (size_t i = 0; i < input.size() - 1; i++) {
         os << tensorCopy[i] << ",";
     }

@@ -7,7 +7,7 @@
 
 
 template<class T>
-Tensor2D<T>::Tensor2D(const std::vector<Tensor<T>> &input) noexcept{
+Tensor2D<T>::Tensor2D(const std::vector<Tensor<T>> &input){
 
     __CHECK__(!isValidInput(input)){
         throw std::logic_error("Cannot instantiate Tensor2D with tensors of different size");
@@ -18,6 +18,24 @@ Tensor2D<T>::Tensor2D(const std::vector<Tensor<T>> &input) noexcept{
     this->rows_ = ptrToTensor2D->size();
     this->cols_ = ptrToTensor2D->at(0).size();
 }
+
+
+template<class T>
+Tensor2D<T>::Tensor2D(const std::initializer_list<Tensor<T>> &input){
+    __CHECK__(!isValidInput(input)){
+        throw std::logic_error("Cannot instantiate Tensor2D with tensors of different size");
+    }
+
+    ptrToTensor2D = std::make_unique<std::vector<Tensor<T>>>(input);
+    std::copy(input.begin(), input.end(), (ptrToTensor2D.get())->begin());
+
+    this->rows_ = ptrToTensor2D->size();
+    this->cols_ = ptrToTensor2D->at(0).size();
+
+}
+
+
+
 
 template<class T>
 bool Tensor2D<T>::isValidInput(const std::vector<Tensor<T>> &input) {
@@ -40,7 +58,7 @@ const Tensor<T> &Tensor2D<T>::operator[](const int &idx) const {
 }
 
 template<class T>
-shape Tensor2D<T>::size() const noexcept {
+const shape Tensor2D<T>::size() const noexcept {
     return shape({this->rows_, this->cols_});
 }
 
@@ -92,7 +110,7 @@ Tensor2D<T> Tensor2D<T>::operator+(const Tensor2D &other) {
 template<class T>
 bool Tensor2D<T>::operator==(Tensor2D &rhs) const {
        for (auto r = 0; r < rows_; r++) {
-        Tensor<T> first = ptrToTensor2D->at(r);
+        const Tensor<T> &first = ptrToTensor2D->at(r);
         Tensor<T> second = rhs[r];
         if (first != second) {
             return false;
@@ -104,6 +122,53 @@ bool Tensor2D<T>::operator==(Tensor2D &rhs) const {
 template<class T>
 bool Tensor2D<T>::operator!=(Tensor2D &rhs) const {
     return !(*this == rhs);
+}
+
+// TODO
+template<class T>
+Tensor2D<T> Tensor2D<T>::transpose() {
+    std::vector<Tensor<T>> result;
+    for (int col = 0; col < this->cols_; col++) {
+        std::vector<T> currColumn;
+        for (int row = 0; row < this->rows_; row++) {
+            currColumn.push_back((*ptrToTensor2D)[row][col]);
+        }
+        result.push_back(Tensor<T>(currColumn));
+    }
+
+    return Tensor2D<T>(std::move(result));
+}
+
+/*
+* Returns a new 2D Tensor
+*
+*/
+// TODO
+template<class T>
+Tensor2D<T> Tensor2D<T>::operator*(const Tensor2D<T> &other) {
+
+    __ASSERT__(other.size().first_dimension == this->size().second_dimension);
+    shape rhsTensorSize = other.size();
+    std::vector<Tensor<T>> result; //(this->size().first_dimension);
+    result.reserve(this->size().first_dimension);
+    // Matrix multiplication
+    // O(n^3)
+    // Can improve it using some sophisticated algorithms but leaving it for now
+    for (int i = 0; i < this->rows_; i++) {
+        std::vector<T> currRowToBeFilled(rhsTensorSize .second_dimension, 0);
+        for (int j = 0; j < rhsTensorSize.second_dimension ; j++) {
+            int temp = 0;
+            for (int k = 0; k < rhsTensorSize.first_dimension; k++) {
+                temp += (*ptrToTensor2D)[i][k] * other[k][j];
+            }
+
+            currRowToBeFilled[j] = temp;
+        }
+        result.push_back(Tensor<T>(currRowToBeFilled)); // casts vector to a tensor
+    }
+
+    return Tensor2D<T>(std::move(result));
+
 }
 
 
