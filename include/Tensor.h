@@ -16,7 +16,7 @@ template<class T>
 class Tensor{
 public:
 
-    __ONLY_FOR_TESTING__ Tensor() noexcept = default;
+    Tensor() noexcept = default;
     explicit Tensor(const std::vector<T> & input) noexcept;
     Tensor(const std::initializer_list<T> &input) noexcept;
     Tensor(const Tensor & input) noexcept;
@@ -49,7 +49,7 @@ public:
 
 
 
-    virtual Tensor &operator=(const Tensor &other);
+    Tensor &operator=(const Tensor &other);
     virtual bool operator==(Tensor &rhs) const;
     virtual bool operator!=(Tensor &rhs) const;
 
@@ -65,10 +65,10 @@ public:
 
 protected:
     __DO_NOT_CALL__
-    virtual auto begin() const noexcept -> decltype(typename std::vector<T>::iterator());
+    auto begin() const noexcept -> decltype(typename std::vector<T>::iterator());
 
     __DO_NOT_CALL__
-    virtual auto end() const noexcept -> decltype(typename std::vector<T>::iterator());
+    auto end() const noexcept -> decltype(typename std::vector<T>::iterator());
 
     __DO_NOT_CALL__
     virtual T front() const;

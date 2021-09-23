@@ -164,8 +164,14 @@ Tensor<T> &Tensor<T>::minus(const Tensor &other) {
 
 template<class T>
 Tensor<T> &Tensor<T>::operator=(const Tensor &other) {
+
+    // give up current ownership
+    this->ptrToTensor.reset();
+
     // points to a newly constructed tensor
     this->ptrToTensor = std::make_unique<std::vector<T>>(other.begin(), other.end());
+    //TODO:
+    // destroy other
     return *this;
 }
 

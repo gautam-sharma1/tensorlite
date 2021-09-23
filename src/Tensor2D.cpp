@@ -107,6 +107,25 @@ Tensor2D<T> Tensor2D<T>::operator+(const Tensor2D &other) {
     return Tensor2D<T>(toReturn);
 }
 
+
+/*
+* Modifies by copy
+*/
+template<class T>
+Tensor2D<T> Tensor2D<T>::operator-(const Tensor2D &other) {
+    std::vector<Tensor<T>> toReturn;
+            __ASSERT__(other.size() == this->size());
+    for (auto r = 0; r < rows_; r++) {
+        Tensor<T> temp1 = ptrToTensor2D->at(r);
+        Tensor<T> temp2 = other[r]; // rth Tensor<T>
+        Tensor<T> temp_result = temp1 - temp2;
+        toReturn.push_back(temp_result);
+    }
+
+    return Tensor2D<T>(toReturn);
+}
+
+
 template<class T>
 bool Tensor2D<T>::operator==(Tensor2D &rhs) const {
        for (auto r = 0; r < rows_; r++) {
@@ -127,6 +146,9 @@ bool Tensor2D<T>::operator!=(Tensor2D &rhs) const {
 // TODO
 template<class T>
 Tensor2D<T> Tensor2D<T>::transpose() {
+    __CHECK__(!isValidInput(*ptrToTensor2D)){
+        throw std::logic_error("Cannot instantiate Tensor2D with tensors of different size");
+    }
     std::vector<Tensor<T>> result;
     for (int col = 0; col < this->cols_; col++) {
         std::vector<T> currColumn;
@@ -155,7 +177,7 @@ Tensor2D<T> Tensor2D<T>::operator*(const Tensor2D<T> &other) {
     // O(n^3)
     // Can improve it using some sophisticated algorithms but leaving it for now
     for (int i = 0; i < this->rows_; i++) {
-        std::vector<T> currRowToBeFilled(rhsTensorSize .second_dimension, 0);
+        std::vector<T> currRowToBeFilled(rhsTensorSize.second_dimension, 0);
         for (int j = 0; j < rhsTensorSize.second_dimension ; j++) {
             int temp = 0;
             for (int k = 0; k < rhsTensorSize.first_dimension; k++) {
@@ -171,6 +193,80 @@ Tensor2D<T> Tensor2D<T>::operator*(const Tensor2D<T> &other) {
 
 }
 
+template<class T>
+Tensor2D<T> &Tensor2D<T>::operator=(Tensor2D &other) {
+
+    __ASSERT__(this != &other);
+
+    // give up current ownership
+    this->reset();
+
+    // points to the input tensor
+    // takes in the new ownership
+    ptrToTensor2D = std::make_unique<std::vector<Tensor<T>>>(other.begin(), other.end());
+
+    this->setRows(ptrToTensor2D->size());
+    this->setCols(ptrToTensor2D->at(0).size());
+
+
+    // input gives up its current ownership
+    other.reset();
+
+    return *this;
+
+}
+
+template<class T>
+Tensor2D<T> &Tensor2D<T>::operator=(Tensor2D &&other) {
+
+    __ASSERT__(this != &other);
+
+    // give up current ownership
+    this->reset();
+
+    // points to the input tensor
+    // takes in the new ownership
+    ptrToTensor2D = std::make_unique<std::vector<Tensor<T>>>(other.begin(), other.end());
+
+    this->setRows(ptrToTensor2D->size());
+    this->setCols(ptrToTensor2D->at(0).size());
+
+    // input gives up its current ownership
+    other.reset();
+
+    return *this;
+
+}
+
+template<class T>
+std::unique_ptr<std::vector<Tensor<T>>> &Tensor2D<T>::getUnderlying2DPtr() {
+    return ptrToTensor2D;
+}
+
+template<class T>
+void Tensor2D<T>::reset() {
+    ptrToTensor2D.reset();
+}
+
+template<class T>
+auto Tensor2D<T>::begin() const noexcept -> decltype(typename std::vector<Tensor<T>>::iterator()){
+    return ptrToTensor2D->begin();
+}
+
+template<class T>
+auto Tensor2D<T>::end() const noexcept -> decltype(typename std::vector<Tensor<T>>::iterator()){
+    return ptrToTensor2D->end();
+}
+
+template<class T>
+void Tensor2D<T>::setRows(size_t rows) {
+    this->rows_ = rows;
+}
+
+template<class T>
+void Tensor2D<T>::setCols(size_t cols) {
+    this->cols_ = cols;
+}
 
 
 // explicit class initialization
