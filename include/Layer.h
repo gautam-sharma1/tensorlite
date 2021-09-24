@@ -12,10 +12,10 @@
 template<class T>
 class Layer{
 public:
-    Layer(size_t in, size_t out):input_(in), output_(out){
+    Layer(size_t in = 10, size_t out = 10, T mean = 0, T stddev = 1):input_(in), output_(out){
         std::random_device rd;  //Will be used to obtain a seed for the random number engine
         std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-        std::uniform_int_distribution<> distrib(-1, 1);
+        std::normal_distribution<> distrib(mean, stddev);
         std::vector<Tensor<T>> result;
         for(int i=0; i<input_; i++){
             std::vector<T> row;
@@ -24,10 +24,22 @@ public:
             }
             result.push_back(Tensor<T>(row));
         }
-//        Tensor2D<T> temp(result);
-//        tensor2D_ = temp;
             tensor2D_ = Tensor2D<T>(result);
     }
+
+    __NO_DISCARD__ const shape size() const noexcept{
+        return shape({input_,output_});
+    }
+
+    const Tensor<T> &operator[](const int &idx) const{
+        __ASSERT__(idx>=0);
+        return tensor2D_[idx];
+    }
+
+    template<class T1>
+    friend std::ostream &operator<<(std::ostream &os, Layer<T1> &t1);
+
+
 
 private:
     Tensor2D<T> tensor2D_;
@@ -35,5 +47,15 @@ private:
     size_t output_;
 };
 
-
+template<class T1>
+std::ostream &operator<<(std::ostream &os, Layer<T1> &input) {
+    auto input_shape = input.size();
+    std::cout << "Layer {" << std::endl;
+    for (int tensor_idx = 0; tensor_idx < input_shape.first_dimension; tensor_idx++) {
+        Tensor<T1> temp(input[tensor_idx]);
+        os << temp;
+    }
+    os << " }" << std::endl;
+    return os;
+}
 #endif //TENSORLITE_LAYER_H

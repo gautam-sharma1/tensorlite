@@ -64,6 +64,7 @@ protected:
     __DO_NOT_CALL__
      auto end() const noexcept -> decltype(typename std::vector<Tensor<T>>::iterator());
 
+    __DO_NOT_CALL__
     std::unique_ptr<std::vector<Tensor<T>>> & getUnderlying2DPtr();
 
 private:
