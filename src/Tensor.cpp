@@ -231,6 +231,12 @@ Tensor<T> &Tensor<T>::multiply(const Tensor &other) {
 
 }
 
+template<class T>
+Tensor<T> &Tensor<T>::multiplyByScalar(const T& scalar) {
+    std::for_each(this->begin(), this->end(), [&](T &x){x *= scalar; });
+    return *this;
+}
+
 template class Tensor<int>;
 template class Tensor<float>;
 template class Tensor<double>;

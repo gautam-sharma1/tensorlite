@@ -37,6 +37,9 @@ public:
     // multiplication by copy
     Tensor2D operator*(const Tensor2D &other);
 
+    // multiplying by scalar
+    Tensor2D & multiplyByScalar(const T &scalar);
+
     // copy assignment
     Tensor2D &operator=(Tensor2D &other);
 

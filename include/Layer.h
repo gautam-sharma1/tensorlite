@@ -36,8 +36,13 @@ public:
         return tensor2D_[idx];
     }
 
+    void multiply(const T & scalar){
+        tensor2D_.multiplyByScalar(scalar);
+    }
+
     template<class T1>
     friend std::ostream &operator<<(std::ostream &os, Layer<T1> &t1);
+
 
 
 

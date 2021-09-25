@@ -47,7 +47,7 @@ public:
     // multiplication by copy
     Tensor operator*(const Tensor &other);
 
-
+    Tensor& multiplyByScalar(const T &scalar);
 
     Tensor &operator=(const Tensor &other);
     virtual bool operator==(Tensor &rhs) const;

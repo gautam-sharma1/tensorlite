@@ -268,6 +268,15 @@ void Tensor2D<T>::setCols(size_t cols) {
     this->cols_ = cols;
 }
 
+template<class T>
+Tensor2D<T> & Tensor2D<T>::multiplyByScalar(const T &scalar){
+    for (int i = 0; i < this->rows_; i++) {
+        Tensor<T> & currRow = *(this->begin() + i);
+        currRow.multiplyByScalar(scalar);
+    }
+    return *this;
+}
+
 
 // explicit class initialization
 template class Tensor2D<int>;
