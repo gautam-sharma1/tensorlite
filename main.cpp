@@ -26,5 +26,5 @@ int main(){
     l.multiply(100);
     cout << l << endl;
 
-    cout << "Done!" << endl;
+
 }
