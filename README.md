@@ -22,14 +22,12 @@ Install tensorlite as follows
 ```bash
   git clone 
   cd tensorlite
-  cd build
-  cmake .. && make
+  make
 ```
 
-## Demo
+[comment]: <> (## Demo)
 
-Insert gif or link to demo
-
+[comment]: <> (Insert gif or link to demo)
 
 ## Usage/Examples
 
@@ -39,12 +37,14 @@ Insert gif or link to demo
 #include "Layer.h"
 #include <iostream>
 using namespace std;
+
+
 Tensor<double> t1  = {{1,2,3,4}};
 Tensor<double> t2 = {{5,6,7,8}};
 Tensor<double> t3 = t1+t2;
 cout << t3 << endl;
 
-// Output { 6,8,10,12 }
+output:{ 6,8,10,12 }
 ```
 
 ```cpp
@@ -99,9 +99,44 @@ Tensor2D {
 { 70,70,70,174,174,70,174,70,174,70,174 }
 }
 ```
+
+```cpp
 Layer<float> l(5,5);
+cout << l1 << endl;
+output:
+Layer {
+{ -1.15307,-0.228105,0.167813,0.86608,-0.62505 }
+{ -0.294773,0.292243,-1.50031,0.93002,-0.470464 }
+{ 0.838648,0.320883,-0.149071,-0.373821,-0.30948 }
+{ 0.45579,-0.565829,-0.139341,-1.63598,0.288001 }
+{ 0.674396,0.281527,-0.044332,-0.312636,1.20646 }
+}
+```
 
+```cpp
+l1.multiply(100);
+output:
+Layer {
+{ -115.307,-22.8105,16.7813,86.608,-62.505 }
+{ -29.4773,29.2243,-150.031,93.002,-47.0464 }
+{ 83.8648,32.0883,-14.9071,-37.3821,-30.948 }
+{ 45.579,-56.5829,-13.9341,-163.598,28.8001 }
+{ 67.4396,28.1527,-4.4332,-31.2636,120.646 }
+}
+```
 
+```cpp
+Layer<double> l2 (5,1);
+Layer<double> ll = l1.multiply(l2);
+cout << ll << endl;
+output:
+Layer {
+{ -44.5445 }
+{ 200.929 }
+{ 128.982 }
+{ -51.4861 }
+{ -38.3569 }
+}
 ```
 
 
@@ -114,7 +149,8 @@ Layer<float> l(5,5);
 To run tests, run the following command
 
 ```bash
-  npm run test
+  ./test_tensor
+  ./test_tensor2D
 ```
 
 
