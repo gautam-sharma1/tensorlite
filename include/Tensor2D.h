@@ -13,10 +13,27 @@ template<class T>
 
 class Tensor2D final: public Tensor<T>{
 public:
-    __ONLY_FOR_TESTING__ Tensor2D() noexcept = default;
+    __ONLY_FOR_TESTING__ Tensor2D()  = default;
 
     explicit Tensor2D(const std::vector<Tensor<T>> & input);
     explicit Tensor2D(const std::initializer_list<Tensor<T>> &input);
+    explicit Tensor2D(Tensor2D<T> &input){
+        // give up current ownership
+        this->reset();
+
+        // points to the input tensor
+        // takes in the new ownership
+        ptrToTensor2D = std::make_unique<std::vector<Tensor<T>>>(input.begin(), input.end());
+
+        this->setRows(ptrToTensor2D->size());
+        this->setCols(ptrToTensor2D->at(0).size());
+
+//        // input gives up its current ownership
+        //input.reset();
+
+    }
+
+
     __NO_DISCARD__ const shape size() const noexcept;
     const Tensor<T> &operator[](const int &idx) const;
     virtual Tensor2D &plus(const Tensor2D &other) final;
@@ -41,10 +58,10 @@ public:
     Tensor2D & multiplyByScalar(const T &scalar);
 
     // copy assignment
-    Tensor2D &operator=(Tensor2D &other);
+    Tensor2D &operator=(const Tensor2D &other);
 
     // move assignment
-    Tensor2D &operator=(Tensor2D &&other);
+    Tensor2D &operator=(Tensor2D &&other) noexcept;
 
     Tensor2D transpose();
     virtual bool operator==(Tensor2D &rhs) const final;
@@ -60,15 +77,16 @@ public:
     void setRows(size_t rows);
     void setCols(size_t cols);
 
-protected:
+    __DO_NOT_CALL__
+    std::unique_ptr<std::vector<Tensor<T>>> & getUnderlying2DPtr() ;
+
     __DO_NOT_CALL__
     auto begin() const noexcept -> decltype(typename std::vector<Tensor<T>>::iterator());
 
     __DO_NOT_CALL__
-     auto end() const noexcept -> decltype(typename std::vector<Tensor<T>>::iterator());
+    auto end() const noexcept -> decltype(typename std::vector<Tensor<T>>::iterator());
 
-    __DO_NOT_CALL__
-    std::unique_ptr<std::vector<Tensor<T>>> & getUnderlying2DPtr();
+
 
 private:
     bool isValidInput(const std::vector<Tensor<T>> &input);

@@ -179,7 +179,7 @@ Tensor2D<T> Tensor2D<T>::operator*(const Tensor2D<T> &other) {
     for (int i = 0; i < this->rows_; i++) {
         std::vector<T> currRowToBeFilled(rhsTensorSize.second_dimension, 0);
         for (int j = 0; j < rhsTensorSize.second_dimension ; j++) {
-            int temp = 0;
+            T temp = 0;
             for (int k = 0; k < rhsTensorSize.first_dimension; k++) {
                 temp += (*ptrToTensor2D)[i][k] * other[k][j];
             }
@@ -194,7 +194,7 @@ Tensor2D<T> Tensor2D<T>::operator*(const Tensor2D<T> &other) {
 }
 
 template<class T>
-Tensor2D<T> &Tensor2D<T>::operator=(Tensor2D &other) {
+Tensor2D<T> &Tensor2D<T>::operator=(const Tensor2D &other) {
 
     __ASSERT__(this != &other);
 
@@ -209,15 +209,12 @@ Tensor2D<T> &Tensor2D<T>::operator=(Tensor2D &other) {
     this->setCols(ptrToTensor2D->at(0).size());
 
 
-    // input gives up its current ownership
-    other.reset();
-
     return *this;
 
 }
 
 template<class T>
-Tensor2D<T> &Tensor2D<T>::operator=(Tensor2D &&other) {
+Tensor2D<T> &Tensor2D<T>::operator=(Tensor2D &&other) noexcept {
 
     __ASSERT__(this != &other);
 
@@ -239,7 +236,7 @@ Tensor2D<T> &Tensor2D<T>::operator=(Tensor2D &&other) {
 }
 
 template<class T>
-std::unique_ptr<std::vector<Tensor<T>>> &Tensor2D<T>::getUnderlying2DPtr() {
+std::unique_ptr<std::vector<Tensor<T>>> &Tensor2D<T>::getUnderlying2DPtr(){
     return ptrToTensor2D;
 }
 
@@ -276,6 +273,19 @@ Tensor2D<T> & Tensor2D<T>::multiplyByScalar(const T &scalar){
     }
     return *this;
 }
+
+// in place multiplication is not needed
+//template<class T>
+//Tensor2D<T> &Tensor2D<T>::multiply(const Tensor2D &other) {
+//    __ASSERT__(other.size().first_dimension == this->size().second_dimension);
+//    // Matrix multiplication
+//    // O(n^3)
+//    // Can improve it using some sophisticated algorithms but leaving it for now
+//    for (int i = 0; i < this->rows_; i++) {
+//        ptrToTensor2D->at(i).multiply(other[i]);
+//    }
+//    return *this;
+//}
 
 
 // explicit class initialization
