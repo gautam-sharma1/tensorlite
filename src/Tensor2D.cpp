@@ -274,6 +274,15 @@ Tensor2D<T> & Tensor2D<T>::multiplyByScalar(const T &scalar){
     return *this;
 }
 
+template<class T>
+Tensor2D<T> &Tensor2D<T>::activation(enum activation act) {
+        for (int i = 0; i < this->rows_; i++) {
+            Tensor<T> &currRow = *(this->begin() + i);
+            currRow.activation(act);
+        }
+    return *this;
+}
+
 // in place multiplication is not needed
 //template<class T>
 //Tensor2D<T> &Tensor2D<T>::multiply(const Tensor2D &other) {

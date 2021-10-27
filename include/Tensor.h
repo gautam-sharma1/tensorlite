@@ -10,6 +10,7 @@
 #include <initializer_list>
 #include "Directives.h"
 #include "Utility.h"
+#include "math.h"
 
 
 template<class T>
@@ -26,7 +27,12 @@ public:
     __NO_DISCARD__ size_t size() const noexcept;
 
 
-    // returns element at index idx
+
+    /**
+     *
+     * @param idx element at index idx
+     * @return const element of type T at index idx
+     */
     const T& operator[] (const int &idx) const;
 
     // inplace addition
@@ -48,7 +54,7 @@ public:
     Tensor operator*(const Tensor &other);
 
     Tensor& multiplyByScalar(const T &scalar);
-
+    Tensor& activation(activation act );
     Tensor &operator=(const Tensor &other);
     virtual bool operator==(Tensor &rhs) const;
     virtual bool operator!=(Tensor &rhs) const;

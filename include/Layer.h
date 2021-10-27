@@ -8,6 +8,7 @@
 #include "Tensor2D.h"
 #include "Utility.h"
 #include <random>
+#include "Activations.h"
 
 template<class T>
 class Layer{
@@ -26,6 +27,8 @@ public:
             result.push_back(Tensor<T>(row));
         }
             tensor2D_ = Tensor2D<T>(result);
+
+        //Activations a;
     }
 
 
@@ -52,6 +55,20 @@ public:
         return *this;
     }
 
+    /**
+     *
+     * Sigmoid activation
+     * S(x) = 1 / 1+e^(-x)
+     * IMPORTANT : changes inplace
+     * T = Tensor2D
+     * @return element wise sigmoid activation
+     */
+    Layer<T> sigmoid(){
+        //Activations::sigmoid_<Tensor2D<T>>(this->tensor2D_);
+        tensor2D_.activation(activation::SIGMOID);
+        return *this;
+    }
+
     __NO_DISCARD__ size_t getInput() const{
         return this->input_;
     }
@@ -70,6 +87,8 @@ private:
 
     size_t input_;
     size_t output_;
+
+
 };
 
 template<class T1>

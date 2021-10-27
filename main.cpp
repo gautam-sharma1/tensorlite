@@ -32,5 +32,13 @@ int main(){
     cout << ll << endl;
     cout << l1 << endl;
 
+    Layer<double> l3 (5,1);
+    cout << l3 << endl;
+    auto sigmoid_tensor = l3.sigmoid();
+
+    cout << sigmoid_tensor << endl;
+
+
+
 
 }

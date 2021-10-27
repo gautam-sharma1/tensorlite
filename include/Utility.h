@@ -7,11 +7,15 @@
 
 #include <cstdio>
 
-enum operation {
+enum class operation {
     ADD = 0,
     SUBTRACT = 1
 };
 
+enum class activation{
+    SIGMOID = 0,
+    RELU = 1
+};
 
 struct shape {
     size_t first_dimension;

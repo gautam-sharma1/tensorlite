@@ -237,6 +237,19 @@ Tensor<T> &Tensor<T>::multiplyByScalar(const T& scalar) {
     return *this;
 }
 
+template<class T>
+Tensor<T> &Tensor<T>::activation(enum activation act) {
+    switch(act) {
+        case(activation::SIGMOID):
+            std::for_each(this->begin(), this->end(), [&](T &x) { x = 1 / (1 + exp(-x)); });
+        case(activation::RELU):
+            std::for_each(this->begin(), this->end(), [&](T &x) {  x > 0 ? x : 0; });
+
+
+    }
+    return *this;
+}
+
 template class Tensor<int>;
 template class Tensor<float>;
 template class Tensor<double>;

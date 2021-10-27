@@ -45,16 +45,24 @@ public:
     // inplace multiplication
     // virtual Tensor2D &multiply(const Tensor2D &other) final;
 
-    // addition by copy
+    /**
+     * addition by copy
+     */
     virtual Tensor2D operator+(const Tensor2D &other) final;
 
-    // subtraction by copy
+    /**
+     * subtraction by copy
+     */
     virtual Tensor2D operator-(const Tensor2D &other) final;
 
-    // multiplication by copy
+     /**
+      * multiplication by copy
+      */
     Tensor2D operator*(const Tensor2D &other);
 
-    // multiplying by scalar
+     /**
+      * multiplying by scalar
+      */
     Tensor2D & multiplyByScalar(const T &scalar);
 
     // copy assignment
@@ -68,7 +76,14 @@ public:
     virtual bool operator!=(Tensor2D &rhs) const final;
     void reset();
 
-    /*
+    /**
+     *
+     * @param act activation such as SIGMOID, RELU etc
+     * @return performs element wise activation
+     */
+    Tensor2D& activation(enum activation act);
+
+    /**
     * Different template argument T1 since ostream is a friend and not part of the Tensor class
     */
     template<class T1>
