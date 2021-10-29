@@ -10,13 +10,21 @@
 // TODO: remove inheritance
 
 template<class T>
-
 class Tensor2D final: public Tensor<T>{
 public:
+    /**
+     * default constructor
+     * NOTE : DO NOT CALL
+     */
     __ONLY_FOR_TESTING__ Tensor2D()  = default;
 
     explicit Tensor2D(const std::vector<Tensor<T>> & input);
     explicit Tensor2D(const std::initializer_list<Tensor<T>> &input);
+
+    /**
+     * Copy constructor
+     * @param input
+     */
     explicit Tensor2D(Tensor2D<T> &input){
         // give up current ownership
         this->reset();
@@ -28,17 +36,31 @@ public:
         this->setRows(ptrToTensor2D->size());
         this->setCols(ptrToTensor2D->at(0).size());
 
-//        // input gives up its current ownership
-        //input.reset();
-
     }
 
 
     __NO_DISCARD__ const shape size() const noexcept;
+
+    /**
+     *
+     * @param idx
+     * @return const Tensor<T> at index idx
+     */
     const Tensor<T> &operator[](const int &idx) const;
+
+
+    /**
+     * Inplace addition
+     * @param other
+     * @return
+     */
     virtual Tensor2D &plus(const Tensor2D &other) final;
 
-    // inplace subtraction
+    /**
+     * Inplace subtraction
+     * @param other
+     * @return
+     */
     virtual Tensor2D &minus(const Tensor2D &other) final;
 
     // TODO:
@@ -65,20 +87,37 @@ public:
       */
     Tensor2D & multiplyByScalar(const T &scalar);
 
-    // copy assignment
+    /**
+     * Copy Assignment
+     * @param other
+     * @return
+     */
     Tensor2D &operator=(const Tensor2D &other);
 
-    // move assignment
+    /**
+     * Move Assignment
+     * @param other
+     * @return
+     */
     Tensor2D &operator=(Tensor2D &&other) noexcept;
 
+    /**
+     *
+     * @return transposes the Tensor2D and returns by copy
+     */
     Tensor2D transpose();
+
     virtual bool operator==(Tensor2D &rhs) const final;
     virtual bool operator!=(Tensor2D &rhs) const final;
+
+    /**
+     * NOTE: Call this carefully. It will reset the unique_ptr so you will loose all the data
+     */
     void reset();
 
     /**
      *
-     * @param act activation such as SIGMOID, RELU etc
+     * @param act: activation such as SIGMOID, RELU etc
      * @return performs element wise activation
      */
     Tensor2D& activation(enum activation act);
@@ -89,21 +128,48 @@ public:
     template<class T1>
     friend std::ostream &operator<<(std::ostream &os, Tensor2D<T1> &t1);
 
+    /**
+     *
+     * @param rows: number of rows
+     */
     void setRows(size_t rows);
+
+    /**
+     *
+     * @param cols: number of columns
+     */
     void setCols(size_t cols);
 
+    /**
+     *
+     * @return unique_ptr to the underlying vector of tensors.
+     * DO NOT CALL
+     */
     __DO_NOT_CALL__
     std::unique_ptr<std::vector<Tensor<T>>> & getUnderlying2DPtr() ;
 
+    /**
+     * CPP STL style begin iterator
+     * @return begin() iterator
+     */
     __DO_NOT_CALL__
     auto begin() const noexcept -> decltype(typename std::vector<Tensor<T>>::iterator());
 
+    /**
+     * CPP STL style end iterator
+     * @return end() iterator
+     */
     __DO_NOT_CALL__
     auto end() const noexcept -> decltype(typename std::vector<Tensor<T>>::iterator());
 
 
 
 private:
+    /**
+     *
+     * @param input
+     * @return returns a bool based on the input. Check if the input tensor is valid. Just used **internally**.
+     */
     bool isValidInput(const std::vector<Tensor<T>> &input);
 
     std::unique_ptr<std::vector<Tensor<T>>> ptrToTensor2D = nullptr;

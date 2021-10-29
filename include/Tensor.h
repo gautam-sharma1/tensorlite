@@ -23,7 +23,6 @@ public:
     Tensor(const Tensor & input) noexcept;
     Tensor(Tensor && input) noexcept;
     Tensor& operator = (Tensor && input) noexcept;
-    //~Tensor = default;
     __NO_DISCARD__ size_t size() const noexcept;
 
 
@@ -35,22 +34,46 @@ public:
      */
     const T& operator[] (const int &idx) const;
 
-    // inplace addition
+    /**
+     * Inplace addition
+     * @param other
+     * @return
+     */
     virtual Tensor &plus(const Tensor &other);
 
-    // inplace subtraction
+    /**
+     * Inplace subtraction
+     * @param other
+     * @return
+     */
     virtual Tensor &minus(const Tensor &other);
 
-    // inplace multiplication
+    /**
+     * Inplace multiplication
+     * @param other
+     * @return
+     */
     virtual Tensor &multiply(const Tensor &other);
 
-    // addition by copy
+    /**
+     * Addition by copy
+     * @param other
+     * @return
+     */
     virtual Tensor operator+(const Tensor &other);
 
-    // subtraction by copy
+    /**
+     * Subtraction by copy
+     * @param other
+     * @return
+     */
     virtual Tensor operator-(const Tensor &other);
 
-    // multiplication by copy
+    /**
+     * Multiplication by copy
+     * @param other
+     * @return
+     */
     Tensor operator*(const Tensor &other);
 
     Tensor& multiplyByScalar(const T &scalar);
@@ -60,30 +83,56 @@ public:
     virtual bool operator!=(Tensor &rhs) const;
 
 
-    /*
+    /**
     * Different template argument T1 since ostream is a friend and not part of the Tensor class
     */
      template<class T1>
      friend std::ostream &operator<<(std::ostream &os, Tensor<T1> &t1);
 
+    /**
+    *
+    * @return unique_ptr to the underlying vector of tensors.
+    * DO NOT CALL
+    */
     __DO_NOT_CALL__
     std::unique_ptr<std::vector<T>> & getUnderlyingPtr();
 
 protected:
+    /**
+     * CPP STL style begin iterator
+     * @return begin() iterator
+     */
     __DO_NOT_CALL__
     auto begin() const noexcept -> decltype(typename std::vector<T>::iterator());
 
+    /**
+    * CPP STL style end iterator
+    * @return end() iterator
+    */
     __DO_NOT_CALL__
     auto end() const noexcept -> decltype(typename std::vector<T>::iterator());
 
+    /**
+     *
+     * @return first element of the tensor
+     */
     __DO_NOT_CALL__
     virtual T front() const;
 
+    /**
+     *
+     * @return last element of the tensor
+     */
     __DO_NOT_CALL__
     virtual T back() const;
 
     virtual Tensor addOrSubtractByCopy(const Tensor &other, operation op) const;
     virtual Tensor &addOrSubtractInPlace(const Tensor &other, operation op);
+
+    /**
+     * Handy function to get the tensor copy
+     * @return
+     */
     virtual Tensor getTensorCopy() const;
 
 
